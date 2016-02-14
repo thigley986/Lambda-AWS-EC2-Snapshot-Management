@@ -26,13 +26,18 @@ def lambda_handler(event, context):
             print "Found EBS volume %s on instance %s" % (
                 vol_id, instance['InstanceId'])
 
-            snap = ec.create_snapshot(
-                VolumeId=vol_id,
-                Description="Snapshot for Instance %s Created by Lambda Snapshot" % instance['InstanceId']
-            )
+            try:
+                snap = ec.create_snapshot(
+                    VolumeId=vol_id,
+                    Description="Snapshot for Instance %s Created by Lambda Snapshot" % instance['InstanceId']
+                )
 
-            print "Creating snapshot %s of volume %s from instance %s" % (
-                snap['SnapshotId'],
-                vol_id,
-                instance['InstanceId']
-            )
+                print "Creating snapshot %s of volume %s from instance %s" % (
+                    snap['SnapshotId'],
+                    vol_id,
+                    instance['InstanceId']
+                )
+
+            except Exception, e:
+                print ("Error Encountered while creating snapshot.")
+                print (e)
